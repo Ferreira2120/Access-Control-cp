@@ -1,0 +1,6 @@
+{
+  "usuarios": [
+    { "id": 1, "nome": "Pedro Ferreira", "nomeUsuario": "pg_565824", "email": "pedro@email.com" },
+    { "id": 2, "nome": "Gabriel Bebé", "nomeUsuario": "gb_562012", "email": "gabriel@email.com" }
+  ]
+}
