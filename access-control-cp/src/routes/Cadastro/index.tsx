@@ -1,12 +1,48 @@
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+
+interface InputsCadastro {
+  nome: string;
+  nomeUsuario: string;
+  email: string;
+}
 
 export default function Cadastro() {
+  const { register, handleSubmit, formState: { errors } } = useForm<InputsCadastro>();
+  const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit: SubmitHandler<InputsCadastro> = async (data) => {
 
-  const onSubmit = (data: unknown) => {
-    console.log(data);
+    try {
+      const userResponse = await fetch(`http://localhost:3000/usuarios?nomeUsuario=${data.nomeUsuario}`);
+      const existingUser = await userResponse.json();
+
+      if (existingUser.length > 0) {
+        alert('Este nome de usuário já está em uso. Por favor, escolha outro.');
+        return;
+      }
+
+      const emailResponse = await fetch(`http://localhost:3000/usuarios?email=${data.email}`);
+      const existingEmail = await emailResponse.json();
+
+      if (existingEmail.length > 0) {
+        alert('Este email já está cadastrado.');
+        return;
+      }
+
+      await fetch('http://localhost:3000/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      alert('Cadastro realizado com sucesso!');
+      navigate('/login');
+
+    } catch (error) {
+      console.error('Erro ao realizar o cadastro:', error);
+      alert('Ocorreu um erro ao tentar cadastrar. Tente novamente.');
+    }
   };
 
   return (
@@ -19,12 +55,10 @@ export default function Cadastro() {
             <input
               id="nome"
               type="text"
-              
               {...register('nome', { required: 'O nome é obrigatório' })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            
-            {errors.nome && <p className="mt-2 text-sm text-red-600">{String(errors.nome.message)}</p>}
+            {errors.nome && <p className="mt-2 text-sm text-red-600">{errors.nome.message}</p>}
           </div>
           <div>
             <label htmlFor="nomeUsuario" className="block text-sm font-medium text-gray-700">Nome de Usuário</label>
@@ -34,7 +68,7 @@ export default function Cadastro() {
               {...register('nomeUsuario', { required: 'O nome de usuário é obrigatório' })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            {errors.nomeUsuario && <p className="mt-2 text-sm text-red-600">{String(errors.nomeUsuario.message)}</p>}
+            {errors.nomeUsuario && <p className="mt-2 text-sm text-red-600">{errors.nomeUsuario.message}</p>}
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -50,7 +84,7 @@ export default function Cadastro() {
               })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            {errors.email && <p className="mt-2 text-sm text-red-600">{String(errors.email.message)}</p>}
+            {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>}
           </div>
           <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Cadastrar
