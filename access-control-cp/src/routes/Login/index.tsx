@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { useForm } from "react-hook-form"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { Link} from 'react-router-dom'
+import { Usuario } from '../../types/tipoUsuario';
 
 
 type Form = {
@@ -8,15 +9,9 @@ type Form = {
     email: string;
 }
 
-type Usuario = {
-    id: number;
-    nome: string;
-    nomeUsuario: string;
-    email: string;
-}
 
 export default function Login(){
-    const {register, handleSubmit, formState: {erros}, reset} = useForm<Form>();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
     useEffect(() => {
         document.title = "Login";
@@ -31,8 +26,13 @@ export default function Login(){
             const usuario = usuarios.find(u => u.nomeUsuario === data.nomeUsuario && u.email === data.email)
 
             if(usuario){
-                alert("Bem vindo ", usuario.nome)
+                alert(`Bem vindo, ${usuario.nome}`);
+                reset();
+            } else{
+                alert("Usuário não foi encontrado")
             }
+        }catch{
+            alert("Erro ao buscar usuário")
         }
     }
 
@@ -45,10 +45,12 @@ export default function Login(){
           <div>
             <label htmlFor="nomeUsuario" className="block text-sm font-medium text-gray-700">Nome de Usuário</label>
             <input
-              id="nomeUsuario"
-              type="text"
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Digite seu nome de usuário"
+                type="text"
+                {...register("nomeUsuario", {required: true})}
+                className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
+            {errors.nomeUsuario}
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
