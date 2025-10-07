@@ -1,7 +1,9 @@
-export default function Rodape(){
-    return(
-        <footer className="flex h-[10vh] justify-center items-center">
-            <p className="text-[#000000]">&copy; Todos os direitos reservados - Grupo Reabilita</p>
-        </footer>
-    );
+export default function Rodape() {
+  const anoAtual = new Date().getFullYear();
+
+  return (
+    <footer className="w-full bg-gray-800 text-white text-center p-4">
+      <p>&copy; {anoAtual} Access Control. Todos os direitos reservados.</p>
+    </footer>
+  );
 }
