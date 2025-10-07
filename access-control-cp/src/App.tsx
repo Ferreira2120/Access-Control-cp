@@ -4,7 +4,7 @@ import Rodape from "./components/Rodape";
 
 export default function App(){
   return(
-    <div>
+    <div className="bg-[#8b8b8b] w-full flex flex-col">
         <Cabecalho/>
         <Outlet/>
         <Rodape/>
