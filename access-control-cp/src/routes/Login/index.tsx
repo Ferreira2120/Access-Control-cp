@@ -17,7 +17,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<InputsLogin> = async (data) => {
     try {
       const response = await fetch(
-        `http://localhost:5001/usuarios?nomeUsuario=${data.nomeUsuario}&email=${data.email}`
+        `http://localhost:3000/usuarios?nomeUsuario=${data.nomeUsuario}&email=${data.email}`
       );
       if (!response.ok) {
         throw new Error("Erro na rede ou o servidor não está respondendo.");
